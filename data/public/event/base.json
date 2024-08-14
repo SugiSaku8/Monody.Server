@@ -1,0 +1,12 @@
+{
+	"name": "Mojimon Event Base",
+	"fast": {
+		"name": "Happy 'Spring' harvest",
+		"file": {
+			"url": {
+				"json": "./event/event.json"
+			}
+		}
+	},
+	"secand":null
+}

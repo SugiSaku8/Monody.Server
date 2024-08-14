@@ -1,0 +1,151 @@
+{
+	"status": {
+		"status": true,
+		"version": 1.5,
+		"message": "Happy 'Spring' harvest"
+	},
+	"info": {
+		"title": "Happy 'Spring' harvest",
+		"mini": "春は収穫の季節。何やらお祭りがあるようです。",
+		"medium": "春は収穫の季節。何やらお祭りがあるようです。さあ、収穫祭限定の特典をゲットして、レベルをさらに上げましょう！",
+		"long": "春は収穫の季節。何やら村ではお祭りがあるようです。その名も'Spring'ハーベスト。さあ、限定の特典を、ミッションをクリアして手に入れよう！",
+		"loong": "春は収穫の季節。何やら村ではお祭りがあるようです。その名も'Spring'ハーベスト。さあ、限定の特典を、ミッションをクリアして手に入れよう！Taikajouset(タイカヨウセト)第一弾です。このイベントでは、Mojimonがつかまりやすくなったり、ミッションを達成するとMojimonやコインがもらえたりします。"
+	},
+	"img": {
+		"Main": "event/event/img/test.png"
+	},
+	"data": {
+		"version": 0.5,
+		"mission": {
+			"levelI": {
+				"name": "はじめの一歩 ~Mojimonとのふれあい~",
+				"description": "10匹のMojimonを捕まえる",
+				"reward": {
+					"type": "coin",
+					"value": 100
+				}
+			},
+			"levelII": {
+				"name": "はじめの一歩 ~商人とのおしゃべり~",
+				"description": "10回商人と取引をする",
+				"reward": {
+					"type": "coin",
+					"value": 100
+				}
+			},
+			"LevelIII": {
+				"name": "Mojimonコンプリート ~まずは基本を~",
+				"description": "10匹の基本Mojimonを捕まえる",
+				"reward": {
+					"type": "mojimon",
+					"value": "雷"
+				}
+			},
+			"LevelIIII": {
+				"name": "コレクターの夢 ~基本はしっかり~",
+				"description": "10大アイテムをすべて購入する",
+				"reward": {
+					"type": "coin",
+					"value": 500
+				}
+			},
+			"LevelV": {
+				"name": "Mojimonコンプリート ~珍種を狙おう~",
+				"description": "25匹の珍種Mojimonを捕まえる",
+				"reward": {
+					"type": "coin",
+					"value": 780
+				}
+			},
+			"LevelVI": {
+				"name": "コレクターの夢 ~見かけない物~",
+				"description": "5大珍種アイテムをすべて購入する",
+				"reward": {
+					"type": "coin",
+					"value": 1500
+				}
+			},
+			"LevelVII": {
+				"name": "Mojimonコンプリート ~レアをミディアムに~",
+				"description": "5匹のレアMojimonを捕まえる",
+				"reward": {
+					"type": "coin",
+					"value": 3000
+				}
+			},
+			"LevelVIII": {
+				"name": "コレクターの夢 ~コレクションに彩を~",
+				"description": "10大レアアイテムをすべて購入する",
+				"reward": {
+					"type": "coin",
+					"value": 5000
+				}
+			},
+			"LevelIX": {
+				"name": "Mojimonコンプリート ~伝説をこの手に~",
+				"description": "10匹の伝説Mojimonを捕まえる",
+				"reward": {
+					"type": "coin",
+					"value": 10000
+				}
+			},
+			"LevelX": {
+				"name": "コレクターの夢 ~地球を一つの部屋に~",
+				"description": "10大伝説アイテムをすべて購入する",
+				"reward": {
+					"type": "coin",
+					"value": 20000
+				}
+			},
+			"LevelXI": {
+				"name": "Mojimonコンプリート ~最後の一歩~",
+				"description": "まだコレクションにない25匹以上もしくはすべてMojimonを捕まえる",
+				"reward": {
+					"type": "coin",
+					"value": 50000
+				}
+			},
+			"LevelXII": {
+				"name": "コレクターの夢 ~最後の一歩~",
+				"description": "まだコレクションにない25個以上もしくすべてのアイテムを購入する",
+				"reward": {
+					"type": "coin",
+					"value": 100000
+				}
+			},
+			"LevelMax": {
+				"name": "伝説の泉",
+				"description": "コンプリートしたコレクションを使ってショップで伝説の泉への地図を購入する",
+				"reward": {
+					"type": "coin",
+					"value": 1000000
+				}
+			},
+			"Special": {
+				"name": "木苺の季節",
+				"description": "木苺を50個木からとる",
+				"reward": {
+					"type": "coin",
+					"value": 50000
+				}
+			}
+		}
+	},
+	"other": {
+		"version": 0.1,
+		"story": {
+			"q": "春の訪れと共に、収穫の季節が始まりました。",
+			"w": "村の長老は、新しい伝統を創り出すことを提案しました。",
+			"e": "その名も「Spring Harvest」。このお祭りは、村の人々が一年間の努力を祝い、共に喜びを分かち合うためのものです。",
+			"r": "あなたは、このお祭りに興味を持ち、長老のもとを訪れました。",
+			"t": "長老はあなたに、お祭りの準備と運営を手伝ってほしいと頼みます。",
+			"y": "あなたは喜んでこれを受け入れ、村の人々と協力して、最初の「Spring Harvest」を成功させるために働き始めました",
+			"u": "このイベントでは、様々なミッションが用意されており、それらをクリアすることで、限定の特典を手に入れることができます。Mojimonがつかまりやすくなったり、ミッションを達成するとMojimonやコインがもらえたりするのです。",
+			"i": "さあ、Spring Harvestを楽しみましょう！"
+		},
+		"copylight": "Copylight Carcommentnation 2024",
+		"comment": {
+			"1": "ここまでやった。めんどかった。（Copilot強し。）あとはJSだけ。"
+		}
+	}
+}

@@ -1,0 +1,739 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="icon" href="img/icon.png" sizes="any" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta charset="utf-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta http-equiv="Expires" content="0" />
+    <meta
+      name="keywords"
+      content="Monody, 学習,  勉強,  ゲーム"
+    />
+    <meta name="description" content="Monodyは、楽しく学べるゲームです。" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="robots" content="all" />
+    <!-- Open Graph meta tags for social media -->
+    <meta property="og:title" content="monody" />
+    <meta
+      property="og:description"
+      content="Monodyは、楽しく学べるゲームです。"
+    />
+    <meta property="og:image" content="img/icon.webp" />
+    <meta property="og:url" content="https://mojimon.onrender.com" />
+    <meta property="og:type" content="webgame" />
+    <meta property="og:locale" content="ja_JP" />
+    <!-- Twitter Card meta tags for Twitter -->
+    <meta name="twitter:card" content="img/icon.png" />
+    <meta name="twitter:title" content="Monody" />
+    <meta
+      name="twitter:description"
+      content="Monodyは、楽しく学べるゲームです。"
+    />
+    <meta name="twitter:image" content="img/icon.webp" />
+    <meta name="author" content="Carnation" />
+    <meta name="designer" content="Carnation Degin" />
+    <meta name="coverage" content="worldwide" />
+    <meta name="rating" content="general" />
+    <meta name="page-topic" content="学習ゲーム,楽習ゲーム" />
+    <meta
+      name="abstract"
+      content="Monodyで遊べば、家で冒険して、人生に必要なことを学べます。"
+    />
+    <title>Monody</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body oncontextmenu="return false;" >
+    <script id="setUserName">
+      window.username = null;
+      // Function to set the username after login
+      function setUsername(newUsername) {
+        username = newUsername;
+        document.getElementById("user_name").textContent = username;
+      }
+    </script>
+    <div id="customDialog" class="customDialogClass">
+      <h2 id="dialogTitles"></h2>
+      <p id="dialogContents"></p>
+      <!---UIががらすにしてあるはずなのに。--->
+      <button id="dialogCloseButton" class="ok" onclick="">OK</button>
+    </div>
+    <div id="dialog-overlay"></div>
+    <script id="costomDialogAPI">
+      function init_enter() {
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") {
+            //初期化
+          }
+        });
+      }
+      function dialog(title, content) {
+        var dialogElement = document.getElementById("customDialog");
+        var overlayElement = document.getElementById("dialog-overlay");
+        var dialogContentElement = document.getElementById("dialogContents");
+        // Set the title and content
+        dialogContentElement.innerHTML =
+          "<strong>" + title + "</strong><br>" + content;
+
+        // Show the dialog and overlay
+        dialogElement.style.display = "block";
+        overlayElement.style.display = "block";
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") {
+            document.getElementById("customDialog").style.display = "none";
+            document.getElementById("dialog-overlay").style.display = "none";
+            init_enter();
+          }
+        });
+      }
+      document
+        .getElementById("dialogCloseButton")
+        .addEventListener("click", function () {
+          // Hide the dialog and overlay
+          document.getElementById("customDialog").style.display = "none";
+          document.getElementById("dialog-overlay").style.display = "none";
+          document.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+              //初期化
+            }
+          });
+        });
+      dialog(
+        "警告",
+        "Monodyはアルファ版です。<br>承知して利用してください。<br>また、音楽が流れるので注意してください。<br>ヘッドフォンやイヤフォンをつけている場合、<br>音量を落としてください。",
+      );
+    </script>
+    <script id="auto script">
+      let auto = 398000;
+    </script>
+    <script src="data.js"></script>
+    <script src="gamecontroller.min.js"></script>
+    <audio
+      src="sound/始まりの大陸bgm.mp3"
+      autoplay
+      id="hajimari"
+      loop
+      volume="0.5"
+    >
+      <p>bgmを再生することができません。推奨ブラウザーを使用してください。</p>
+    </audio>
+    <audio src="sound/文字もんバトル.mp3" id="battle" loop volume="0.5">
+      <p>bgmを再生することができません。推奨ブラウザーを使用してください。</p>
+    </audio>
+    <audio src="sound/walk.mp3" id="walk"></audio>
+    <div id="jouhou">
+      <!--情報をここから入手できるようにする予定-->
+      <a style="display: none" id="teki_H"></a>
+      <a style="display: none" id="teki_name"></a>
+      <a style="display: none" id="teki_A"></a>
+      <a style="display: none" id="teki_B"></a>
+      <a style="display: none" id="teki_S"></a>
+      <a style="display: none" id="jibun_H"></a>
+      <a style="display: none" id="jibun_name"></a>
+      <a style="display: none" id="jibun_A"></a>
+      <a style="display: none" id="jibun_B"></a>
+      <a style="display: none" id="jibun_S"></a>
+    </div>
+    <div id="main_battle">
+      <!--敵-->
+      <a id="teki_hp"></a>
+      <a>/</a>
+      <a id="teki_hp_max"></a>
+      <br />
+      <img id="teki_mojimon" src="" />
+      <br /><br /><br />
+      <!--自分-->
+      <img id="jibun_mojimon" src="" />
+      <br />
+      <a id="jibun_hp"></a>
+      <a>/</a>
+      <a id="jibun_hp_max"></a>
+      <br />
+
+      <button onclick="open_attack()" id="attack_button">こうげき</button>
+      <div id="attack">
+        <button class="white" id="taiatari" onclick="waza.taiatari()">
+          たいあたり
+        </button>
+        <button
+          class="white"
+          type="button"
+          id="binta"
+          onclick="waza.binta(teki_result,jibun_result)"
+        >
+          びんた
+        </button>
+        <br />
+        <!--
+        <button class="waterB" type="button">
+          　もじもんの特性を考えて攻撃すると経験値が上がります。
+        </button>
+        ちょっとまってね。-->
+        <!----<button
+          class="waterB"
+          type="button"
+          onclick="waza.taiatari(teki_result,jibun_result)"
+        >
+          使わないから
+        </button>
+        ------>
+      </div>
+      <!-- (='X'=) -->
+      <button onclick="open_items()" id="items_button">アイテム</button>
+      <div id="items">
+        <button class="yellow" type="button">エネルギービスケット</button>
+        <button class="yellow" type="button">エナジードリンク</button>
+        <button class="yellow" type="button">兵法書</button>
+      </div>
+      <br />
+      <button onclick="open_hokaku()" id="hokaku_button" class="yellow">
+        つかまえる
+      </button>
+      <div
+        id="hokaku_gamen"
+        class="glass"
+        style="text-align: center; display: none"
+      >
+        <h4>この漢字を読んで文字もんをつかまえよう！</h4>
+        <h1 style="text-align: center" id="hokaku_gamen_jukugo"></h1>
+        <input type="text" style="text-align: center" id="hokaku_gamen_text" />
+      </div>
+      <button onclick="modoru()" id="modoru_button" class="mini_button">
+        もどる
+      </button>
+      <h3 id="mes"></h3>
+    </div>
+    <script src="waza.js"></script>
+    <div id="start_window">
+      <div id="title_window">
+        <p id="title">Monody
+      </p>
+      </div>
+      <br />
+      <button id="start" class="start" onclick="setup()">スタート</button>
+      <button
+        id="start"
+        class="play single"
+        onclick="StartSinglePlay()"
+        style="color: #000000;"
+      >
+        プレイ
+      </button>
+      <button
+        id="start"
+        class="play multi"
+        onclick="StartMultiPlay()"
+        style="color: #000000; width:400px;"
+      >
+      マルチプレイ
+      </button>
+      <p></p>
+      <button id="help" id="tutorial" onclick="tutorial()">ヘルプ</button>
+      <p style="text-align: center; font-size: 20px">Carnation Studio           Monody Alpha-0.1</p>
+      <div class="notification">
+        <img src="/img/info.svg" alt="通知アイコン" />
+        <div class="notification-text">
+          2024,July,12 名称をMojimonからMonodyへ変更しました。<br>
+          これを機に、さまざまなシステムを変更しました。<br>
+          また、ナンバリングを変更し、Aplha版に改名しました。
+          Carnation Studio 2024/7/12
+        </div>
+      </div>
+    </div>
+    <div id="tokusyu">
+      <div id="setup" class="setup">
+        <div class="setup_dia">
+          <div class="setup_dia-overlay"></div>
+          <div class="setup_dialog" style="color: white">
+            <h2>はじめる</h2>
+            <button onclick="tutorial()">ヘルプ</button>
+            <h2>アカウント</h2>
+            <h4>初めて遊ぶ人→アカウント登録</h4>
+            <h4>2回目以降→ログイン</h4>
+            <button onclick="account_touroku()">アカウント登録</button>
+            <button onclick="account_login()">ログイン</button>
+          </div>
+        </div>
+      </div>
+      <div id="account_touroku_form">
+        <div class="setup_dia">
+          <div class="setup_dia-overlay"></div>
+          <div class="setup_dialog">
+            <form method="POST" style="color: white">
+              <h2>アカウント登録</h2>
+              <h5>アカウントを登録したら、errorになってしまった人へ</h5>
+              <h6>
+                すでに同じ名前のアカウントが存在するようです。<br />別の名前に変更してください。
+              </h6>
+              名前<input
+                type="text"
+                name="name"
+                autocomplete="username"
+              /><br />
+              パスワード<input
+                type="password"
+                name="password"
+                autocomplete="new-password"
+              /><br />
+              <input
+                type="submit"
+                onclick="document.getElementById('message').innerHTML = 'アカウントの登録に成功しました。'"
+                class="greenbtn"
+              />
+              <div id="message" style="color: green"></div>
+            </form>
+            <button onclick="setup();">もどる</button>
+          </div>
+        </div>
+      </div>
+      <div id="account_login_form">
+        <div class="setup_dia">
+          <div class="setup_dia-overlay"></div>
+          <div class="setup_dialog">
+            <form id="searchForm" style="color: white">
+              <h2>Carnationアカウントでログイン</h2>
+              ユーザー名
+              <input
+                type="text"
+                id="searchName"
+                autocomplete="username"
+              /><br />
+              パスワード
+              <input
+                type="password"
+                id="searchPassword"
+                autocomplete="current-password"
+              /><br />
+              <input
+                type="submit"
+                class="green"
+                name="ログインする"
+                onclick="loginUser(document.getElementById('searchName').value,document.getElementById('searchPassword').value);"
+              />
+              <div id="result" class="green"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="modal" id="modal">
+        <div class="popup glass rounded">
+          <h2 style="font-family: &quot;MP&quot;, &quot;cf&quot;">Monody</h2>
+          <p style="font-family: &quot;MP&quot;, &quot;cf&quot;">
+            Version:Alpha 0.1<br />
+            ©2023-24
+          </p>
+          <button class="button" onclick="back();">ゲームに戻る</button>
+          <br />
+          <button class="button" onclick="">設定</button>
+          <br />
+          <button class="button" onclick="save();save_server();back();">
+            保存して終了
+          </button>
+        </div>
+      </div>
+      <div class="modal" id="account">
+        <div
+          class="popup glass rounded"
+          style="background-color: #cae5cd; opacity: 0.9; font-weight: bold"
+        >
+          <a>アカウント名:<span id="name"></span></a><br /><br />
+          <a
+            >残りの<span
+              style="
+                font-weight: 400;
+                font-family: &quot;cf&quot;, &quot;number&quot;;
+              "
+              ></span
+            >:<span id="pl_nokori" style="font-family:'number'';"></span
+            ><span style="font-weight: 400; font-family: &quot;cf&quot;"
+              ></span
+            ></a
+          ><br /><br />
+          <a>経験値:<span id="exp"></span></a><br /><br />
+          <a>もじもんの一覧:<button id="mojimon_list">開く</button></a>
+          <br />
+          <a>アイテムの一覧:<button>開く</button></a>
+          <br />
+          <button class="button" onclick="back_e();">ゲームに戻る</button>
+        </div>
+      </div>
+      <div class="modal" id="late">
+        <div class="content">
+          <div id="content-section1" class="content-section">
+            <div class="tab">
+              <button class="tablinks" onclick="openTab(event, 'Tab1','MMASP')">
+                MMASP
+              </button>
+              <button class="tablinks" onclick="openTab(event, 'Tab2','CAR')">
+                CAR
+              </button>
+              <button class="tablinks" onclick="openTab(event, 'Tab3','NTA')">
+                NTA
+              </button>
+            </div>
+            <!-- タブのコンテンツ部分 -->
+            <div id="Tab1" class="tabcontent">
+              <canvas id="MMASP"></canvas>
+              <p>Mojimon Market Average Share Price</p>
+            </div>
+
+            <div id="Tab2" class="tabcontent">
+              <canvas id="CAR"></canvas>
+              <p>Carnation Corp.</p>
+            </div>
+
+            <div id="Tab3" class="tabcontent">
+              <canvas id="NTA"></canvas>
+              <p>National Transport Associationa</p>
+            </div>
+          </div>
+          <div id="content-section2" class="content-section hidden">
+            <p style="display: flex">CARの株価は、<a id="CAR_now"></a>です。</p>
+            <input id="CAR_Kibou" type="number" value="0" min="0" />
+            <button
+              id="buy_CAR"
+              onclick="fetch_Bank('https://e4aa0edf-44a5-4534-bcf2-f5bd5ff79088-00-nrv22tf81lf6.kirk.replit.dev/buy/CAR/',document.getElementById('CAR_Kibou').value)"
+            >
+              CARの株を購入する
+            </button>
+            <p style="display: flex">NTAの株価は、<a id="NTA_now"></a>です。</p>
+            <input id="NTA_Kibou" type="number" value="0" min="0" />
+            <button
+              id="buy_NTA"
+              onclick="fetch_Bank('https://e4aa0edf-44a5-4534-bcf2-f5bd5ff79088-00-nrv22tf81lf6.kirk.replit.dev/buy/NTA/',document.getElementById('NTA_Kibou').value)"
+            >
+              NTAの株を購入する
+            </button>
+          </div>
+          <div id="content-section3" class="content-section hidden">
+            <h2>Sells</h2>
+            <p>所持している各株を売却することができます。</p>
+            <p>現在中央取引局は営業していません</p>
+          </div>
+        </div>
+      </div>
+      <div id="zukan">
+        <div class="overlay"></div>
+        <div id="mojimon-zukan"></div>
+      </div>
+      <!-- 図鑑の画面 -->
+      <div class="Gauge" id="gauge">
+        <div id="health-bar">
+          <img src="/img/status/HP.png" class="health-icon" />
+          <img src="/img/status/HP.png" class="health-icon" />
+          <img src="/img/status/HP.png" class="health-icon" />
+          <img src="/img/status/HP.png" class="health-icon" />
+          <img src="/img/status/HP.png" class="health-icon" />
+          <img src="img/status/HP.png" class="health-icon" />
+          <img src="img/status/HP.png" class="health-icon" />
+          <img src="img/status/HP.png" class="health-icon" />
+          <img src="img/status/HP.png" class="health-icon" />
+          <img src="img/status/HP.png" class="health-icon" />
+        </div>
+      </div>
+      <div id="crystalWindow" class="crystalWindow">
+          <div class="crystalContent">
+              <span class="close" onclick="document.getElementById('crystalWindow').style.display = 'none';">&times;</span>
+              <ul id="serverList"></ul>
+          </div>
+      </div>
+    </div>
+    <div id="sea"></div>
+   <div id="filter">
+     <div id="morning"></div>
+     <div id="afternoon"></div>
+     <div id="day"></div>
+     <div id="evening"></div>
+     <div id="earlyevening"></div>
+     <div id="night"></div>
+     <div id="midnight"></div>
+     <div id="dawn"></div>
+   </div>
+    <div id="map" style="z-index:100000;">
+        <div class="info" id="readme" style="display: none">  
+        <h2 class="info-title"><span id="info_title"></span></h2>
+        <div class="info-body" id="info_body"></div>
+        </div>
+        <div id="CofB">
+        <!----きもちわるい(?)---->
+        <div id="mojimon_spawn" style="width: 0px; height: 0px"; >
+          <img
+            style="top: 0px; left: 0px; width: 32px; height: 32px"
+            id="mojimon_spawn1"
+            class="ms"
+            onclick="open_battle(1)"
+          />
+          <img
+            style="top: 0px; left: 0px; width: 32px; height: 32px"
+            id="mojimon_spawn2"
+            class="ms"
+            onclick="open_battle(2)"
+          />
+
+          <img
+            style="top: 0px; left: 0px; width: 32px; height: 32px"
+            id="mojimon_spawn3"
+            class="ms"
+            onclick="open_battle(3)"
+          />
+
+          <img
+            style="top: 0px; left: 0px; width: 32px; height: 32px"
+            id="mojimon_spawn4"
+            class="ms"
+            onclick="open_battle(4)"
+          />
+
+          <img
+            style="top: 0px; left: 0px; width: 32px; height: 32px"
+            id="mojimon_spawn5"
+            class="ms"
+            onclick="open_battle(5)"
+          />
+
+          <img
+            style="top: 0px; left: 0px; width: 32px; height: 32px"
+            id="mojimon_spawn6"
+            class="ms"
+            onclick="open_battle(6)"
+          />
+
+          <img
+            style="top: 0px; left: 0px; width: 32px; height: 32px"
+            id="mojimon_spawn7"
+            class="ms"
+            onclick="open_battle(7)"
+          />
+
+          <img
+            style="top: 0px; left: 0px; width: 32px; height: 32px"
+            id="mojimon_spawn8"
+            class="ms"
+            onclick="open_battle(8)"
+          />
+
+          <img
+            style="top: 0px; left: 0px; width: 32px; height: 32px"
+            id="mojimon_spawn9"
+            class="ms"
+            onclick="open_battle(9)"
+          />
+
+          <img
+            style="top: 0px; left: 0px; width: 32px; height: 32px"
+            id="mojimon_spawn10"
+            class="ms"
+            onclick="open_battle(10)"
+          />
+        </div>
+        <div id="skinContainer" style="width: 0px; height: 0px">
+          <img id="SKIN" src="skin.webp" style="width: 64px; height: 64px; transform: translate(` $(window).width() / 2 - skin.width / 2 + 'px' `, ` $(window).height() / 2 - skin.height / 2 + 'px'  `)"/>
+        </div>
+        <map name="image-map" id="CofBmap">
+          <img
+            style="width: 5120px; height: 3840px"
+            src="./map/CofB.png"
+            usemap="#ImageMap"
+            alt=""
+            id="map-desu."
+          />
+          <map name="ImageMap">
+            <area
+              shape="rect"
+              onclick="open_trihiki();"
+              class="tri"
+              coords="1330, 1546, 2522, 2442"
+              alt=""
+            />
+            <area
+              shape="rect"
+              onclick="open_trihiki();"
+              g
+              class="tri"
+              coords="2694, 1554, 4108, 2506"
+              alt=""
+            />
+            <area
+              shape="rect"
+              onclick="open_trihiki();"
+              class="tri"
+              coords="2156, 654, 3500, 1290"
+              alt=""
+            />
+            <!--まだ追加しない予定のバトル
+              <area shape="circle"onclick="open_battle();" class="moji"coords="434,514,304" alt="" />
+              <area shape="circle"onclick="open_battle();" class="moji"coords="492,1486,252"  alt="" />
+              <area shape="circle"onclick="open_battle();" class="moji"coords="347,1037,217"  alt="" />
+              <area shape="circle"onclick="open_battle();"class="moji" coords="880,1272,1"  alt="" />
+              <area shape="circle"onclick="open_battle();" class="moji"coords="1195,1615,393" alt="" />
+              <area shape="circle"onclick="open_battle();"class="moji" coords="1937,1673,342"  alt="" />
+              <area shape="circle"onclick="open_battle();"class="moji"coords="2165,434,313"  alt="" />
+              <area shape="circle"onclick="open_battle();" class="moji"coords="2313,1005,204" alt="" />
+              -->
+            <area
+              shape="rect"
+              coords="698,1126,784,1150"
+              class="tri"
+              alt=""
+              onclick="alert('家がクリックされました。')"
+            />
+            <area
+              shape="rect"
+              coords="1445,533,1512,591"
+              class="tri"
+              alt=""
+              onclick="alert('BlueStar')"
+            />
+          </map>
+        </map>
+        <div id="joystick">
+          <div id="arrow-up"></div>
+          <div id="arrow-right"></div>
+          <div id="arrow-down"></div>
+          <div id="arrow-left"></div>
+        </div>
+        <div id="chat_app">
+          <!-- ヘッダー部分 -->
+          <div id="chat_header">
+            <!--  アイコン 
+            <img src="path_to_user_avatar.jpg" alt="User Avatar" id="user_avatar">
+            <!---  ユーザー名 -->
+            <span id="user_name">Username</span>
+          </div>
+          <!--  メッセージリスト -->
+          <ul id="message_list">
+            <!--  メッセージの例 
+            <li class="message_bubble user_message">Hello, how are you?</li>
+            <li class="message_bubble friend_message">Hi, I'm doing great! How about you?</li>-->
+          </ul>
+          <!--  メッセージ入力フォーム -->
+          <form id="message_form">
+            <input
+              type="text"
+              id="message_input"
+              placeholder="メッセージをここに入力してください。"
+            />
+            <button type="submit">送信</button>
+          </form>
+        </div>
+        <div id="joystick">
+          <div id="arrow-up"></div>
+          <div id="arrow-right"></div>
+          <div id="arrow-down"></div>
+          <div id="arrow-left"></div>
+        </div>
+      </div>
+        <div id="dialogueOverlay">
+        <div id="dialogueMessage"></div>
+      </div>
+    </div>
+    <div id="trihiki" style="font-family: &quot;mojimon&quot;, &quot;cf&quot;">
+      <div
+        id="dialog"
+        class="glass"
+        style="display: none; font-family: &quot;mojimon&quot;, &quot;cf&quot;"
+      >
+        <p
+          id="dialogText"
+          style="font-family: &quot;mojimon&quot;, &quot;cf&quot;"
+        ></p>
+        <!--仮-->
+        <button class="glassButton" id="close">閉じる</button>
+        <button class="glassButton" id="money_button">支払う</button>
+      </div>
+
+      <div id="syounin_img"></div>
+      <div id="item_img"></div>
+    </div>
+    <div id="ginkou"></div>
+    <table id="inventory">
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+    <div id="splash-screen" class="splash-screen">
+      <img class="splash-image" src="/img/splash.png" alt="Carnation Studio">
+    </div>
+    <div id="Event" class="Event" style="display: none">
+      <div id="Event_title" class="Event_title" class="text"></div>
+      <img id="titleIMG" />
+      <div id="mijikai" class="text"></div>
+      <div id="hutuu" class="text"></div>
+      <div id="nagai" class="text"></div>
+      <div id="nagasugi" class="text"></div>
+      <div id="mission" class="text"></div>
+      <div id="story" class="text"></div>
+      <button
+        id="Close_eve"
+        class="ok"
+        onclick="document.getElementById('dialog-overlay-eve').style.display = 'none';"
+      >
+        OK
+      </button>
+    </div>
+
+    <div id="dialog-overlay-eve" style="display: none"></div>
+    <div id="API">
+      <script src="/API/command.api.js"></script>
+      <script src="/API/Global.api.js"></script>
+      <script src="/API/GameHost.api.js"></script>
+      <script src="/API/Setup.api.js"></script>
+      <script src="/API/Login.api.js"></script>
+      <script src="/API/Onload.api.js"></script>
+      <script src="/API/Style.api.js"></script>
+      <script src="/API/Save.api.js"></script>
+      <script src="/API/Tutorial.api.js"></script>
+      <script src="/API/Shop.api.js"></script>
+      <script src="/API/Bag.api.js"></script>
+      <script src="/API/Bank.api.js"></script>
+      <script src="/API/Chat.api.js"></script>
+      <script src="/API/Mojimon.api.js"></script>
+      <script src="/API/Spawn.api.js"></script>
+      <script src="/API/SkinMove.api.js"></script>
+      <script src="/API/Multi-Play.api.js"></script>
+      <script src="/API/GamePad.api.js"></script>
+      <script src="/API/MpS.getServer.api.js"></script>
+      <script src="/API/education.api.js"> </script>
+    </div>
+
+  </body>
+</html>

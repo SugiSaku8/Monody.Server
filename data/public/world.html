@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>MPS Multiplayer UI</title>
+    <style>
+        /* style.css */
+      <div id="crystalWindow" class="crystalWindow">
+          <div class="crystalContent">
+              <span class="close">&times;</span>
+              <ul id="serverList"></ul>
+          </div>
+      </div>
+    </style>
+</head>
+<body>
+
+<button id="openCrystalWindow">Open Crystal Window</button>
+
+<!-- クリスタルウィンドウ -->
+<div id="crystalWindow" class="crystalWindow">
+    <div class="crystalContent">
+        <span class="close">&times;</span>
+        <ul id="serverList"></ul>
+    </div>
+</div>
+
+<script>
+  // script.js
+  document.addEventListener('DOMContentLoaded', function() {
+      const crystalWindow = document.getElementById("crystalWindow");
+      const btn = document.getElementById("openCrystalWindow");
+      const span = document.getElementsByClassName("close")[0];
+      const serverList = document.getElementById('serverList');
+
+      // クリスタルウィンドウを開く関数
+      function openCrystalWindow() {
+          crystalWindow.style.display = "block";
+      }
+
+      // クリスタルウィンドウを閉じる関数
+      function closeCrystalWindow() {
+          crystalWindow.style.display = "none";
+      }
+
+      // クリスタルウィンドウにクリックされたときに閉じる
+      window.onclick = function(event) {
+          if (event.target == crystalWindow) {
+              closeCrystalWindow();
+          }
+      }
+
+      // クローズボタンにクリックされたときに閉じる
+      span.onclick = function() {
+          closeCrystalWindow();
+      }
+
+      // クリスタルウィンドウを開くボタンにクリックされたときにクリスタルウィンドウを開く
+      btn.onclick = openCrystalWindow;
+
+      // サーバーリストの初期化
+      const servers = [
+          { name: 'Test 1', info: 'Online' ,url:'http://localhost:0000',secure:false},
+          { name: 'Carnation Server', info: 'Offline' ,url:'https://mojimon.onrender.com',secure:true}
+      ];
+      if (servers.length === 0) {
+          serverList.innerHTML = '<li class="serverListItem">(ᐡ-ܫ•ᐡ) Nossing MpS Server</li>';
+      } else {
+          servers.forEach(server => {
+              const listItem = document.createElement('li');
+              listItem.className = 'serverListItem';
+              listItem.innerHTML = `<strong>${server.name}</strong><br>${server.info}<br>${server.url}<br><button onclick="mps('${server.url}')">Boot this Server</button><br>Secure: ${server.secure}<br>`;
+              serverList.appendChild(listItem);
+          });
+      }
+  });
+</script>
+</body>
+</html>

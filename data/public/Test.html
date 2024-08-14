@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>銀行の仕組み</title>
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin:   0;
+          padding:   0;
+          height:   100vh;
+          background-color: #f0f0f0;
+          display: block;
+      }
+
+      #bankSystem {
+          width:  300px;
+          margin:  0 auto;
+          padding:   20px;
+          background-color: #fff;
+          border-radius:   5px;
+          box-shadow:   0   0   10px rgba(0,0,0,0.1);
+      }
+
+      input, select, button {
+          display: block;
+          width:  100%;
+          margin:   5px   0;
+          padding:   5px;
+      }
+
+      button {
+          background-color: #007BFF;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+
+      button:hover {
+          background-color: #0056b3;
+      }
+
+    </style>
+  </head>
+  <body>
+    <h1>銀行の仕組み</h1>
+    <br>
+    <br>
+    <div id="bankSystem">
+      <input type="number" id="amount" placeholder="金額を入力" />
+      <select id="operation">
+        <option value="borrow">借りる</option>
+        <option value="lend">貸す</option>
+      </select>
+      <button onclick="calculate(false)">計算</button>
+      <br>
+      <p id="result"></p>
+    </div>
+    <script>
+      let intervalId;
+      function calculate() {
+        const amount = parseFloat(document.getElementById("amount").value);
+        const operation = document.getElementById("operation").value;
+        const annualInterestRate = localStorage.getItem("Rate"); //  年利を5%とします
+        let result = 0;
+        if (operation === "borrow") {
+          // 借りる場合、元本に年利を加算
+          result = amount + amount * annualInterestRate;
+        } else if (operation === "lend") {
+          // 貸す場合、元本から年利を引く
+          result = amount - amount * annualInterestRate;
+        }
+        //  結果を表示
+        if (result.toFixed(2) === "NaN") {
+          document.getElementById("result").textContent =
+            `ここには結果が表示されます。`;
+        } else {
+          document.getElementById("result").textContent = 
+            `結果: ${result.toFixed(2)}円`;
+        }
+      }
+      //  ページが読み込まれたときに一度計算を実行
+      calculate();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Genarate.Debug</title>
+<script>
+function displayImage() {
+  fetch('URL/generate')
+   .then(response => {
+      // レスポンスが成功した場合
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.blob(); // Blobオブジェクトを返す
+    })
+   .then(blob => {
+      // BlobオブジェクトからURLを生成
+      var imageUrl = URL.createObjectURL(blob);
+      // img要素のsrc属性に画像URLを設定
+      document.querySelector('#imageDisplay').src = imageUrl;
+    })
+   .catch(error => {
+      console.error('There has been a problem with your fetch operation:', error);
+    });
+}
+</script>
+</head>
+<body>
+
+<img id="imageDisplay" alt="表示する画像" style="width: 500px;">
+
+<button onclick="displayImage()">画像表示</button>
+
+</body>
+</html>
